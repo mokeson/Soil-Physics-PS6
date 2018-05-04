@@ -1,0 +1,62 @@
+---
+title: "Problem Set 6"
+author: "Morgan Okeson"
+date: "May 2, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+2. 
+```{r, echo=TRUE}
+
+#variables
+ho<--2 #(cm)
+r<-2.25 #(cm)
+alpha<-0.036
+n<-1.56
+area<-pi*(r^2) #(cm^2)
+area
+
+#Data
+t<-c(0,15,30,45,60,75,90,105,120) #(s)
+V<-c(100,90,83,77,67,61,56,49,45) #(ml)
+df<-data.frame(t,V)
+df$sqrt.t<-sqrt(df$t)
+df$cinf.I<-(100-V)/area
+
+#zhang model function
+zhang<-lm(cinf.I~I(sqrt.t^2)+sqrt.t+0,df)
+zhang
+
+c1<-0.02210
+c2<-0.08214
+
+
+```
+
+Calculate A and K
+```{r, echo=TRUE}
+
+#calculate A
+A<-((11.65)*(((n^0.1)-1)*(exp((7.5*(n-1.9))*alpha*ho)))/((alpha*r)^0.91))
+A
+
+#Calculate K
+K<-c1/A
+K
+
+```
+
+Plotting the Fit
+```{r, echo=TRUE}
+
+#plot data
+plot(cinf.I~sqrt.t,df, main="Cumulative Infiltration Model",xlab=expression(t^{1/2}~(s)),ylab="Cumulative Infiltration (cm)",pch=20,col="black")
+
+#Predict I
+x<-seq(0,sqrt(120),0.1)
+y<-c1*x^2+c2*x
+lines(y~x)
+
+```
